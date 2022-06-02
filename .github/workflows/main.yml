@@ -12,30 +12,30 @@ on: push
 
 jobs:
 
-run-linters:
+ run-linters:
 
-  name: GitHub's Super Linter
+   name: GitHub's Super Linter
 
-  runs-on: ubuntu-latest
+   runs-on: ubuntu-latest
 
-  steps:
+   steps:
 
-    - name: Check out Git repository
+     - name: Check out Git repository
 
-      uses: actions/checkout@master
+       uses: actions/checkout@master
 
-    - name: Run GitHub Super Linter
+     - name: Run GitHub Super Linter
 
-      uses: github/super-linter@main
+       uses: github/super-linter@main
 
-      env:
+       env:
 
-        VALIDATE_ALL_CODEBASE: true
+         VALIDATE_ALL_CODEBASE: true
 
-        VALIDATE_JAVASCRIPT_STANDARD: false
+         VALIDATE_JAVASCRIPT_STANDARD: false
 
-        VALIDATE_JSCPD: false
+         VALIDATE_JSCPD: false
 
-        DEFAULT_BRANCH: main
+         DEFAULT_BRANCH: main
 
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
