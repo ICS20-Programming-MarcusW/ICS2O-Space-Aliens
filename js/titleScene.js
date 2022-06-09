@@ -48,8 +48,8 @@ class TitleScene extends Phaser.Scene {
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
    */ 
   update (time, delta) {
-    // Switch screen after 8000 milliseconds
-    if (time > 8000){
+    // Switch screen after 7000 milliseconds
+    if (time > 7000){
       this.scene.switch('menuScene')
     }
   }  

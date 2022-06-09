@@ -8,6 +8,20 @@
 
 // This class is the Title Scene
 class GameScene extends Phaser.Scene {
+  // Create an enemy
+  createAlien() {
+    // this will get a number between 1 and 1080;
+    const alienYLocation = Math.floor(Math.random() * 1080) + 1
+    // this will get a number between 1 and 50;
+    let alienYVelocity = Math.floor(Math.random() * 50) + 1 
+    // this will add minus sign in 50% of cases
+    alienYVelocity *= Math.round(Math.random()) ? 1 : -1 
+    const anAlien = this.physics.add.sprite(2000, alienYLocation, 'alien')
+    // Set the y coordinate velocity to -200
+    anAlien.body.velocity.x = -200
+    anAlien.body.velocity.y = alienYVelocity
+    this.alienGroup.add(anAlien)
+  }
   // This method is the constructor.
   constructor () {
     super({ key: 'gameScene' })
@@ -15,6 +29,13 @@ class GameScene extends Phaser.Scene {
     this.background = null
     this.ship = null
     this.fireMissile = false
+    // Create score and set to 0
+    this.score = 0
+    this.scoreText = null
+    this.scoreTextStyle = { font: '55px Arial', fill: '#ffffff', align: 'center' }
+    // Create Game over text
+    this.gameOverText = null
+    this.gameOverTextStyle = { font: '65px Arial', fill: '#ff0000', align: 'center' }
   }
 
   /* Get the scene up and running, initialize data object with content of another data object (our particular scene). 
@@ -31,8 +52,12 @@ class GameScene extends Phaser.Scene {
     // Loading the images
     this.load.image('gameSceneBackground', 'images/trackBackground.PNG')
     this.load.image('ship', 'images/skylineCar.png')
-    this.load.image('ship2', 'images/skylineLeft.png')
     this.load.image('missile', 'images/tire.png')
+    this.load.image('alien', 'images/alien.png')
+    // Loading the sounds
+    this.load.audio('laser', 'sound/laser1.wav')
+    this.load.audio('explosion', 'sound/barrelExploding.wav')
+    this.load.audio('bomb', 'sound/bomb.wav')
   }
 
   /* Creating a new object by using an existing object as the prototype for the new object. Used to create game objects. 
@@ -42,10 +67,37 @@ class GameScene extends Phaser.Scene {
     // Scaling and setting background image to proper spot
     this.background = this.add.image(0, 0, 'gameSceneBackground').setScale(5.0)
     this.background.setOrigin(0, 0)
+    // Text for the users score
+    this.scoreText = this.add.text(10, 10, 'Score: ' + this.score.toString(), this.scoreTextStyle)
     this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'ship').setScale(0.12)
     // Creating a group for the missiles
     this.missileGroup = this.physics.add.group()
+    // Creating a group for the enemies
+    this.alienGroup = this.add.group()
+    this.createAlien()
+    // Collisions between missiles and aliens
+    this.physics.add.collider(this.missileGroup, this.alienGroup, function(missileCollide, alienCollide) {
+      alienCollide.destroy()
+      missileCollide.destroy()
+      this.sound.play('explosion')
+      this.score = this.score + 1
+      this.scoreText.setText('Score: ' + this.score.toString())
+      this.createAlien()
+      this.createAlien()
+    }.bind(this))
+    
+    // Collisions between car and aliens
+    this.physics.add.collider(this.ship, this.alienGroup, function (shipCollide, alienCollide) {
+      this.sound.play('bomb')
+      this.physics.pause()
+      alienCollide.destroy()
+      shipCollide.destroy()
+      this.gameOverText = this.add.text(1920 / 2, 1080 / 2, 'Game Over!\nClick to play again.', this.gameOverTextStyle).setOrigin(0.5)
+      this.gameOverText.setInteractive({ useHandCursor: true })
+      this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
+    }.bind(this))
   }
+  
 
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
@@ -107,6 +159,8 @@ class GameScene extends Phaser.Scene {
         const aNewMissile = this.physics.add.sprite(this.ship.x, this.ship.y, 'missile')
         // Add missile to group
         this.missileGroup.add(aNewMissile)
+        // Add sound when tire is shot/space bar clicked
+        this.sound.play('laser')
       }
     }
 
@@ -114,6 +168,14 @@ class GameScene extends Phaser.Scene {
     if (keySpaceObj.isUp === true) {
       this.fireMissile = false
     }
+
+    // Function to move the missile and then destroy once it leeaves the screen
+    this.missileGroup.children.each(function (item) {
+      item.x = item.x + 15
+      if (item.x < 0) {
+        item.destroy()
+      }
+    })
   }  
 }
 
