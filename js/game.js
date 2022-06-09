@@ -49,5 +49,4 @@ game.scene.add('menuScene', menuScene)
 game.scene.add('gameScene', gameScene)
 
 // start title
-//game.scene.start('splashScene')
-game.scene.start('gameScene')
+game.scene.start('splashScene')

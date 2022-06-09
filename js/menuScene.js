@@ -11,13 +11,14 @@ class MenuScene extends Phaser.Scene {
   // This method is the constructor.
   constructor () {
     super({ key: 'menuScene' })
+    // Create my variables (menu scene background, start button)
     this.menuSceneBackgroundImage = null
     this.startButton = null
   }
 
   /* Get the scene up and running, initialize data object with content of another data object (our particular scene). 
    * This method is called by the Scene Manager when the scene starts, before preload() and create(). data = Any data passed 
-   * via ScenePlugin.add() or ScenePlugin.start(). Background colour is set to goldenrod. 
+   * via ScenePlugin.add() or ScenePlugin.start(). Background colour is set to white. 
    */ 
   init (data) {
     this.cameras.main.setBackgroundColor('#ffffff')
@@ -26,6 +27,7 @@ class MenuScene extends Phaser.Scene {
   // Handle asynchronous external file loading in a blocking manner. Used to load assets.
   preload () {
     console.log('Menu Scene')
+    // Load background image and start button
     this.load.image('menuSceneBackground', 'images/nissanSkyline2.jpg')
     this.load.image('startButton', 'images/pressStart.gif')
   }
@@ -34,10 +36,11 @@ class MenuScene extends Phaser.Scene {
    * data = Any data passed via ScenePlugin.add() or ScenePlugin.start(). 
    */
   create (data) {
+    // Scaling and setting background image to proper spot
     this.menuSceneBackgroundImage = this.add.sprite(0, 0, 'menuSceneBackground').setScale(2.75)
     this.menuSceneBackgroundImage.x = 1920 / 2
     this.menuSceneBackgroundImage.y = 1080 / 2
-
+    // Setting button to proper spot and making it interactive
     this.startButton = this.add.sprite(1920 / 2, (1080 / 2) + 100, 'startButton')
     this.startButton.setInteractive({ useHandCursor: true })
     this.startButton.on('pointerdown', () => this.clickButton())
@@ -50,6 +53,7 @@ class MenuScene extends Phaser.Scene {
   }
   
   clickButton () {
+    // Start game scene when button is clicked
     this.scene.start('gameScene')
   }
 }

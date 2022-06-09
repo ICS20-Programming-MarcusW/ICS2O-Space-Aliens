@@ -31,6 +31,7 @@ class SplashScene extends Phaser.Scene {
    * data = Any data passed via ScenePlugin.add() or ScenePlugin.start(). 
    */
   create (data) {
+    // Setting splash scene image to proper scale and spot
     this.splashSceneBackgroundImage = this.add.sprite(0, 0, 'splashSceneBackground')
     this.splashSceneBackgroundImage.x = 1920 / 2
     this.splashSceneBackgroundImage.y = 1080 / 2
@@ -41,6 +42,7 @@ class SplashScene extends Phaser.Scene {
    */
   update (time, delta) {
     if (time > 4000){
+      // Switch screen after 4000 milliseconds
       this.scene.switch('titleScene')
     }
   }  
