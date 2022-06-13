@@ -36,6 +36,10 @@ class GameScene extends Phaser.Scene {
     // Create Game over text
     this.gameOverText = null
     this.gameOverTextStyle = { font: '65px Arial', fill: '#ff0000', align: 'center' }
+    // Create text for lives
+    this.lives = 3
+    this.livesText = null
+    this.livesTextStyle = { font: '55px Arial', fill: '#ffffff', align: 'center' }
   }
 
   /* Get the scene up and running, initialize data object with content of another data object (our particular scene). 
@@ -72,6 +76,8 @@ class GameScene extends Phaser.Scene {
     this.background.setOrigin(0, 0)
     // Text for the users score
     this.scoreText = this.add.text(20, 20, 'Score: ' + this.score.toString(), this.scoreTextStyle)
+    // Text for the users lives counter
+    this.livesText = this.add.text(333, 20, 'Lives: ' + this.lives.toString(), this.livesTextStyle)
     this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'shipR')
     // Creating a group for the missiles
     this.missileGroup = this.physics.add.group()
@@ -106,6 +112,8 @@ class GameScene extends Phaser.Scene {
     const keyDownObj = this.input.keyboard.addKey('DOWN')
     // Look at scene, then for input from of the keyboard, then look for the space key
     const keySpaceObj = this.input.keyboard.addKey('SPACE')
+
+    
     
     if (keyLeftObj.isDown === true) {
       // Subtract from x location once left key is pressed down
@@ -176,16 +184,33 @@ class GameScene extends Phaser.Scene {
       }
     })
 
+    this.alienGroup.children.each(function (item) {
+      
+      if (item.x < 0) {
+        item.x = 1920
+        // regenerate a random y value
+        // set item.y to the random y value
+      }
+    })
+// ??????????????????????????????????????????????????????????????????????
     // Collisions between car and aliens
     this.physics.add.collider(this.ship, this.alienGroup, function (shipCollide, alienCollide) {
       this.sound.play('bomb')
-      this.physics.pause()
-      alienCollide.destroy()
-      shipCollide.destroy()
-      this.gameOverText = this.add.text(1920 / 2, 1080 / 2, 'Game Over!\nClick to play again.', this.gameOverTextStyle).setOrigin(0.5)
-      this.gameOverText.setInteractive({ useHandCursor: true })
-      this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
+      this.lives = this.lives - 1
+      this.livesText.text = "Lives: " + this.lives
+      console.log ("**Lives = " + this.lives) 
+      if (this.lives === 0) {
+        this.physics.pause()
+        alienCollide.destroy()
+        shipCollide.destroy()
+     
+        this.score = 0
+        this.gameOverText = this.add.text(1920 / 2, 1080 / 2, 'Game Over!\nClick to play again.', this.gameOverTextStyle).setOrigin(0.5)
+        this.gameOverText.setInteractive({ useHandCursor: true })
+        this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
+      }      
     }.bind(this))
+    //this.lives = 3
   }
 }
 
