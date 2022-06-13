@@ -14,6 +14,7 @@ class MenuScene extends Phaser.Scene {
     // Create my variables (menu scene background, start button)
     this.menuSceneBackgroundImage = null
     this.startButton = null
+    this.instructionsButton = null
   }
 
   /* Get the scene up and running, initialize data object with content of another data object (our particular scene). 
@@ -30,6 +31,7 @@ class MenuScene extends Phaser.Scene {
     // Load background image and start button
     this.load.image('menuSceneBackground', 'images/nissanSkyline2.jpg')
     this.load.image('startButton', 'images/pressStart.gif')
+    this.load.image('instructionsButton', 'images/instructionsButton.png')
   }
 
   /* Creating a new object by using an existing object as the prototype for the new object. Used to create game objects. 
@@ -44,6 +46,11 @@ class MenuScene extends Phaser.Scene {
     this.startButton = this.add.sprite(1920 / 2, (1080 / 2) + 100, 'startButton')
     this.startButton.setInteractive({ useHandCursor: true })
     this.startButton.on('pointerdown', () => this.clickButton())
+
+    // Setting instructions button to proper spot and making it interactive
+    this.instructionsButton = this.add.sprite(1920 / 2, (1080 / 2) + 300, 'instructionsButton').setScale(0.25)
+    this.instructionsButton.setInteractive({ useHandCursor: true })
+    this.instructionsButton.on('pointerdown', () => this.clickButton2())
   }
 
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
@@ -55,6 +62,10 @@ class MenuScene extends Phaser.Scene {
   clickButton () {
     // Start game scene when button is clicked
     this.scene.start('gameScene')
+  }
+  clickButton2 () {
+    // Start game scene when button is clicked
+    this.scene.start('instructionsScene')
   }
 }
 

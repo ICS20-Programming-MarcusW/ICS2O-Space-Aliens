@@ -18,7 +18,7 @@ class GameScene extends Phaser.Scene {
     alienYVelocity *= Math.round(Math.random()) ? 1 : -1 
     const anAlien = this.physics.add.sprite(2000, alienYLocation, 'alien')
     // Set the y coordinate velocity to -200
-    anAlien.body.velocity.x = -200
+    anAlien.body.velocity.x = -150
     anAlien.body.velocity.y = alienYVelocity
     this.alienGroup.add(anAlien)
   }
@@ -51,9 +51,10 @@ class GameScene extends Phaser.Scene {
     console.log('Game Scene')
     // Loading the images
     this.load.image('gameSceneBackground', 'images/trackBackground.PNG')
-    this.load.image('ship', 'images/skylineCar.png')
+    this.load.image('shipR', 'images/skylineCarRight.png')
+    this.load.image('shipL', 'images/skylineCarLeft.png')
     this.load.image('missile', 'images/tire.png')
-    this.load.image('alien', 'images/alien.png')
+    this.load.image('alien', 'images/enemyCar.png')
     // Loading the sounds
     this.load.audio('laser', 'sound/laser1.wav')
     this.load.audio('explosion', 'sound/barrelExploding.wav')
@@ -64,12 +65,13 @@ class GameScene extends Phaser.Scene {
    * data = Any data passed via ScenePlugin.add() or ScenePlugin.start(). 
    */
   create (data) {
+    
     // Scaling and setting background image to proper spot
     this.background = this.add.image(0, 0, 'gameSceneBackground').setScale(5.0)
     this.background.setOrigin(0, 0)
     // Text for the users score
-    this.scoreText = this.add.text(10, 10, 'Score: ' + this.score.toString(), this.scoreTextStyle)
-    this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'ship').setScale(0.12)
+    this.scoreText = this.add.text(20, 20, 'Score: ' + this.score.toString(), this.scoreTextStyle)
+    this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'shipR')
     // Creating a group for the missiles
     this.missileGroup = this.physics.add.group()
     // Creating a group for the enemies
@@ -85,19 +87,8 @@ class GameScene extends Phaser.Scene {
       this.createAlien()
       this.createAlien()
     }.bind(this))
-    
-    // Collisions between car and aliens
-    this.physics.add.collider(this.ship, this.alienGroup, function (shipCollide, alienCollide) {
-      this.sound.play('bomb')
-      this.physics.pause()
-      alienCollide.destroy()
-      shipCollide.destroy()
-      this.gameOverText = this.add.text(1920 / 2, 1080 / 2, 'Game Over!\nClick to play again.', this.gameOverTextStyle).setOrigin(0.5)
-      this.gameOverText.setInteractive({ useHandCursor: true })
-      this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
-    }.bind(this))
   }
-  
+
 
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
@@ -119,11 +110,15 @@ class GameScene extends Phaser.Scene {
     if (keyLeftObj.isDown === true) {
       // Subtract from x location once left key is pressed down
       this.ship.x = this.ship.x - 15
+      this.ship.destroy()
+      this.ship = this.physics.add.sprite(this.ship.x, this.ship.y, 'shipL')
     }
 
     if (keyRightObj.isDown === true) {
       // Add to x location once right key is pressed down
       this.ship.x = this.ship.x + 15
+      this.ship.destroy()
+      this.ship = this.physics.add.sprite(this.ship.x, this.ship.y, 'shipR') 
     }
 
     if (keyUpObj.isDown === true) {
@@ -176,7 +171,19 @@ class GameScene extends Phaser.Scene {
         item.destroy()
       }
     })
-  }  
+
+    // Collisions between car and aliens
+    this.physics.add.collider(this.ship, this.alienGroup, function (shipCollide, alienCollide) {
+      this.sound.play('bomb')
+      this.physics.pause()
+      alienCollide.destroy()
+      shipCollide.destroy()
+      this.gameOverText = this.add.text(1920 / 2, 1080 / 2, 'Game Over!\nClick to play again.', this.gameOverTextStyle).setOrigin(0.5)
+      this.gameOverText.setInteractive({ useHandCursor: true })
+      this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
+    }.bind(this))
+
+  }
 }
 
 export default GameScene

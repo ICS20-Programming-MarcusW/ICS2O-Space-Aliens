@@ -49,7 +49,7 @@ class TitleScene extends Phaser.Scene {
    */ 
   update (time, delta) {
     // Switch screen after 7000 milliseconds
-    if (time > 7000){
+    if (time > 5000){
       this.scene.switch('menuScene')
     }
   }  

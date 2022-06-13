@@ -11,12 +11,14 @@ import SplashScene from './splashScene.js'
 import TitleScene from './titleScene.js'
 import MenuScene from './menuScene.js'
 import GameScene from './gameScene.js'
+import InstructionsScene from './instructionsScene.js'
 
 // Create our game scenes
 const splashScene = new SplashScene()
 const titleScene = new TitleScene()
 const menuScene = new MenuScene()
 const gameScene = new GameScene()
+const instructionsScene = new InstructionsScene()
 
 //* Game scene */
 const config = {
@@ -26,7 +28,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true
+      debug: false
     }
   },
   // set background color (goldenRod)
@@ -47,6 +49,7 @@ game.scene.add('splashScene', splashScene)
 game.scene.add('titleScene', titleScene)
 game.scene.add('menuScene', menuScene)
 game.scene.add('gameScene', gameScene)
+game.scene.add('instructionsScene', instructionsScene)
 
 // start title
 game.scene.start('splashScene')
