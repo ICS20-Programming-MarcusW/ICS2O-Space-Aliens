@@ -12,8 +12,11 @@ class InstructionsScene extends Phaser.Scene {
   constructor () {
     super({ key: 'instructionsScene' })
     this.Text = null
+    // Create text body #1
     this.TextStyle = { font: '55px Roboto', fill: '#218a8a', align: 'center' }
+    // Create text body #2
     this.TextStyle2 = { font: '22px Calibri', fill: '#124c4c', align: 'left' }
+    // Create text body #3
     this.TextStyle3 = { font: '22px Calibri', fill: '#124c4c', align: 'left', width: '50px' }
     this.menuButton = null
   }
@@ -38,11 +41,11 @@ class InstructionsScene extends Phaser.Scene {
   create (data) {
     // Set title scene text to center, then down a little bit
     this.titleSceneText = this.add.text(1920 / 2, (1080 / 2) - 350, 'Skyline : Instructions', this.TextStyle).setOrigin(0.5)
-    //.................................
+    // Text for the goal of my video game
     this.titleSceneText2 = this.add.text(1920 / 2, (1080 / 2) - 200, 'Goal : The goal of the game as a player is to get as high as a score as you possibly can. You can play against friends, and whoever ends up with the highest score, wins.', this.TextStyle2).setOrigin(0.5)
-    //...............................2
+    // Text for how to play my video game
     this.titleSceneText3 = this.add.text(1920 / 2, (1080 / 2), 'How to play : \n\n 1. You are a blue nissan skyline that is trying to stay alive as long as you can. \n 2. There are enemies that will spawn and come at you and in order to kill them, you must use your weapon (tires) to dissipate them. \n 3. If the enemies end up colliding with you, you will then lose. \n 4. They are only dangerous from the front, so you can collide with them from behind. \n\n Have Fun!', this.TextStyle3).setOrigin(0.5)
-    // 
+    // Menu button
     this.menuButton = this.add.sprite(1920 / 2, (1080 / 2) + 300, 'menuButton').setScale(0.09)
     this.menuButton.setInteractive({ useHandCursor: true })
     this.menuButton.on('pointerdown', () => this.clickButton3())

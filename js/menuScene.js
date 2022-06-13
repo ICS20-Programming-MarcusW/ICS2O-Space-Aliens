@@ -14,6 +14,7 @@ class MenuScene extends Phaser.Scene {
     // Create my variables (menu scene background, start button)
     this.menuSceneBackgroundImage = null
     this.startButton = null
+    // Instructions button to lead to instrucitons page
     this.instructionsButton = null
   }
 
@@ -46,7 +47,6 @@ class MenuScene extends Phaser.Scene {
     this.startButton = this.add.sprite(1920 / 2, (1080 / 2) + 100, 'startButton')
     this.startButton.setInteractive({ useHandCursor: true })
     this.startButton.on('pointerdown', () => this.clickButton())
-
     // Setting instructions button to proper spot and making it interactive
     this.instructionsButton = this.add.sprite(1920 / 2, (1080 / 2) + 300, 'instructionsButton').setScale(0.25)
     this.instructionsButton.setInteractive({ useHandCursor: true })

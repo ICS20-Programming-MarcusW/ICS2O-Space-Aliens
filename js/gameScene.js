@@ -51,7 +51,9 @@ class GameScene extends Phaser.Scene {
     console.log('Game Scene')
     // Loading the images
     this.load.image('gameSceneBackground', 'images/trackBackground.PNG')
+    // Right car image
     this.load.image('shipR', 'images/skylineCarRight.png')
+    // Left car image
     this.load.image('shipL', 'images/skylineCarLeft.png')
     this.load.image('missile', 'images/tire.png')
     this.load.image('alien', 'images/enemyCar.png')
@@ -65,7 +67,6 @@ class GameScene extends Phaser.Scene {
    * data = Any data passed via ScenePlugin.add() or ScenePlugin.start(). 
    */
   create (data) {
-    
     // Scaling and setting background image to proper spot
     this.background = this.add.image(0, 0, 'gameSceneBackground').setScale(5.0)
     this.background.setOrigin(0, 0)
@@ -89,7 +90,6 @@ class GameScene extends Phaser.Scene {
     }.bind(this))
   }
 
-
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
    */ 
@@ -110,14 +110,18 @@ class GameScene extends Phaser.Scene {
     if (keyLeftObj.isDown === true) {
       // Subtract from x location once left key is pressed down
       this.ship.x = this.ship.x - 15
+      // Destroy ship
       this.ship.destroy()
+      // Paste left ship in same location
       this.ship = this.physics.add.sprite(this.ship.x, this.ship.y, 'shipL')
     }
 
     if (keyRightObj.isDown === true) {
       // Add to x location once right key is pressed down
       this.ship.x = this.ship.x + 15
+      // Destroy ship
       this.ship.destroy()
+      // Paste right ship in same location
       this.ship = this.physics.add.sprite(this.ship.x, this.ship.y, 'shipR') 
     }
 
@@ -182,7 +186,6 @@ class GameScene extends Phaser.Scene {
       this.gameOverText.setInteractive({ useHandCursor: true })
       this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
     }.bind(this))
-
   }
 }
 
