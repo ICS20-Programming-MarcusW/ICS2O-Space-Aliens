@@ -28,6 +28,7 @@ class GameScene extends Phaser.Scene {
     // Create my variables (background, ship/sprite, missile/weapon)
     this.background = null
     this.ship = null
+    this.crash = null
     this.fireMissile = false
     // Create score and set to 0
     this.score = 0
@@ -59,12 +60,13 @@ class GameScene extends Phaser.Scene {
     this.load.image('shipR', 'images/skylineCarRight.png')
     // Left car image
     this.load.image('shipL', 'images/skylineCarLeft.png')
+    this.load.image('carCrash', 'images/carCrash.png')
+
     this.load.image('missile', 'images/tire.png')
     this.load.image('alien', 'images/enemyCar.png')
     // Loading the sounds
-    this.load.audio('laser', 'sound/laser1.wav')
-    this.load.audio('explosion', 'sound/barrelExploding.wav')
-    this.load.audio('bomb', 'sound/bomb.wav')
+    this.load.audio('laser', 'sound/tireShot.wav')
+    this.load.audio('explosion', 'sound/carCrash.wav')
   }
 
   /* Creating a new object by using an existing object as the prototype for the new object. Used to create game objects. 
@@ -96,11 +98,21 @@ class GameScene extends Phaser.Scene {
     }.bind(this))
   }
 
+  wait(ms){
+    var current = new Date().getTime();
+    var end = current + ms;
+    while(end < current) {
+      current = new Date().getTime();
+    }
+  }
+
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
    */ 
   update (time, delta) {
     // Called 60 times a second.
+    var audio = new Audio('sound/gcSound.mp3');
+    audio.play();
     // Create variables to get information about what is happening to each key
     // Look at scene, then for input from of the keyboard, then look for the left key
     const keyLeftObj = this.input.keyboard.addKey('LEFT')
@@ -188,29 +200,39 @@ class GameScene extends Phaser.Scene {
       
       if (item.x < 0) {
         item.x = 1920
-        // regenerate a random y value
-        // set item.y to the random y value
+        const alienYCoordinate = Math.floor(Math.random() * 1080) + 1
+        item.y = alienYCoordinate
       }
     })
-// ??????????????????????????????????????????????????????????????????????
     // Collisions between car and aliens
     this.physics.add.collider(this.ship, this.alienGroup, function (shipCollide, alienCollide) {
-      this.sound.play('bomb')
+      this.sound.play('explosion')
+      this.ship.destroy()
+      
+      if(this.crash != null){
+        this.crash.destroy()
+      }
+
+      this.crash = this.physics.add.sprite(this.ship.x, this.ship.y, 'carCrash')
+      
+      this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'shipR')
+
       this.lives = this.lives - 1
       this.livesText.text = "Lives: " + this.lives
-      console.log ("**Lives = " + this.lives) 
       if (this.lives === 0) {
         this.physics.pause()
         alienCollide.destroy()
         shipCollide.destroy()
-     
+        this.ship.destroy()        
         this.score = 0
         this.gameOverText = this.add.text(1920 / 2, 1080 / 2, 'Game Over!\nClick to play again.', this.gameOverTextStyle).setOrigin(0.5)
         this.gameOverText.setInteractive({ useHandCursor: true })
         this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
       }      
     }.bind(this))
-    //this.lives = 3
+    if(this.lives === 0){
+      this.lives = 3
+    }
   }
 }
 
