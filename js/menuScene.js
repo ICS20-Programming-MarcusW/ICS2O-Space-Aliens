@@ -57,8 +57,6 @@ class MenuScene extends Phaser.Scene {
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
    */ 
   update (time, delta) {
-    let audioM = new Audio('sound/mcSound.mp3');
-    audioM.play();
   }
   
   clickButton () {

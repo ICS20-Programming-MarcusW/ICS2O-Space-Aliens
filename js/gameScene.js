@@ -67,6 +67,9 @@ class GameScene extends Phaser.Scene {
     // Loading the sounds
     this.load.audio('laser', 'sound/tireShot.wav')
     this.load.audio('explosion', 'sound/carCrash.wav')
+    this.load.audio('boo', 'sound/cBoo.wav')
+    
+    //this.load.audio('bgMusic', '../sound/gcSound.mp3')
   }
 
   /* Creating a new object by using an existing object as the prototype for the new object. Used to create game objects. 
@@ -96,7 +99,22 @@ class GameScene extends Phaser.Scene {
       this.createAlien()
       this.createAlien()
     }.bind(this))
-  }
+
+
+      const myAudio = new Audio('../sound/gcSound.mp3'); 
+      if (typeof myAudio.loop == 'boolean')
+      {
+          myAudio.loop = true;
+      }
+      else
+      {
+          myAudio.addEventListener('ended', function() {
+              this.currentTime = 0;
+              this.play();
+          }, false);
+      }
+      myAudio.play();
+    }
 
   wait(ms){
     var current = new Date().getTime();
@@ -110,9 +128,12 @@ class GameScene extends Phaser.Scene {
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
    */ 
   update (time, delta) {
-    // Called 60 times a second.
-    var audio = new Audio('sound/gcSound.mp3');
-    audio.play();
+    // Called 60 times a second, ideally!
+    
+    //const audio = new Audio(bgMusic)
+    //audio.play()
+    //var audio = new Audio('../sound/gcSound.mp3');
+    //audio.play();
     // Create variables to get information about what is happening to each key
     // Look at scene, then for input from of the keyboard, then look for the left key
     const keyLeftObj = this.input.keyboard.addKey('LEFT')
@@ -196,30 +217,39 @@ class GameScene extends Phaser.Scene {
       }
     })
 
+    // test if enemy leaves screen
     this.alienGroup.children.each(function (item) {
-      
-      if (item.x < 0) {
-        item.x = 1920
+    
+      if ((item.x < 0) ||  (item.y < 0)) {
+        // Put back to right side of screen
+        item.x = 2000
+        // generate a random y value on the screen
         const alienYCoordinate = Math.floor(Math.random() * 1080) + 1
         item.y = alienYCoordinate
       }
     })
+    
+    
     // Collisions between car and aliens
     this.physics.add.collider(this.ship, this.alienGroup, function (shipCollide, alienCollide) {
       this.sound.play('explosion')
       this.ship.destroy()
+
+     
       
       if(this.crash != null){
         this.crash.destroy()
       }
 
       this.crash = this.physics.add.sprite(this.ship.x, this.ship.y, 'carCrash')
+ 
       
       this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'shipR')
 
       this.lives = this.lives - 1
       this.livesText.text = "Lives: " + this.lives
       if (this.lives === 0) {
+        this.sound.play('boo')
         this.physics.pause()
         alienCollide.destroy()
         shipCollide.destroy()
@@ -233,6 +263,7 @@ class GameScene extends Phaser.Scene {
     if(this.lives === 0){
       this.lives = 3
     }
+    
   }
 }
 
