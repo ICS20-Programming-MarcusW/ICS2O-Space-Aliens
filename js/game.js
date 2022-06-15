@@ -24,22 +24,22 @@ const instructionsScene = new InstructionsScene()
 
 //* Game scene */
 const config = {
-  type: Phaser.AUTO,
-  width: 1920,
-  height: 1080,
-  physics: {
-    default: 'arcade',
-    arcade: {
-      debug: false
-    }
-  },
-  // set background color (goldenRod)
-  backgroundColor: 0xdaa520,
-  scale: {
-    mode: Phaser.Scale.FIT,
-    // we place it in the middle of the page.
-    autoCenter: Phaser.Scale.CENTER_BOTH
-  }
+	type: Phaser.AUTO,
+	width: 1920,
+	height: 1080,
+	physics: {
+		default: 'arcade',
+		arcade: {
+			debug: false
+		}
+	},
+	// set background color (goldenRod)
+	backgroundColor: 0xdaa520,
+	scale: {
+		mode: Phaser.Scale.FIT,
+		// we place it in the middle of the page.
+		autoCenter: Phaser.Scale.CENTER_BOTH
+	}
 }
 
 const game = new Phaser.Game(config)
@@ -54,5 +54,5 @@ game.scene.add('menuScene', menuScene)
 game.scene.add('gameScene', gameScene)
 game.scene.add('instructionsScene', instructionsScene)
 
-// start title
-game.scene.start('gameScene')
+// start click scene
+game.scene.start('clickScene')
