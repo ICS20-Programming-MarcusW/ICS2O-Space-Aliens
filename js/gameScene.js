@@ -20,20 +20,27 @@ class GameScene extends Phaser.Scene {
     // Set the y coordinate velocity to -200
     anAlien.body.velocity.x = -150
     anAlien.body.velocity.y = alienYVelocity
+    // Group for all aliens
     this.alienGroup.add(anAlien)
   }
   // This method is the constructor.
   constructor () {
     super({ key: 'gameScene' })
-    // Create my variables (background, ship/sprite, missile/weapon)
+    // Create my variables
+    // Create audio and set to null
+    this.myAudio = null
+    // Create background and set to null
     this.background = null
+    // Create car and set to null
     this.ship = null
+    // Create crash and set to null
     this.crash = null
+    // Create fire missile and set to false
     this.fireMissile = false
     // Create score and set to 0
     this.score = 0
     this.scoreText = null
-    this.scoreTextStyle = { font: '55px Arial', fill: '#ffffff', align: 'center' }
+    this.scoreTextStyle = { font: '55px Arial', fill: '#ffffff', align: 'center', position: 'absolute' }
     // Create Game over text
     this.gameOverText = null
     this.gameOverTextStyle = { font: '65px Arial', fill: '#ff0000', align: 'center' }
@@ -48,6 +55,7 @@ class GameScene extends Phaser.Scene {
    * via ScenePlugin.add() or ScenePlugin.start(). Background colour is set to goldenrod. 
    */ 
   init (data) {
+    // Initialize backgroudn color to white
     this.cameras.main.setBackgroundColor('#ffffff')
   }
 
@@ -60,16 +68,19 @@ class GameScene extends Phaser.Scene {
     this.load.image('shipR', 'images/skylineCarRight.png')
     // Left car image
     this.load.image('shipL', 'images/skylineCarLeft.png')
+    // Car crash / destruction image
     this.load.image('carCrash', 'images/carCrash.png')
-
+    // Tire image
     this.load.image('missile', 'images/tire.png')
+    // Enemy car image
     this.load.image('alien', 'images/enemyCar.png')
     // Loading the sounds
+    // Tire sound for weapon/missile
     this.load.audio('laser', 'sound/tireShot.wav')
+    // Explosion sounds for collisions
     this.load.audio('explosion', 'sound/carCrash.wav')
+    // Game over sound
     this.load.audio('boo', 'sound/cBoo.wav')
-    
-    //this.load.audio('bgMusic', '../sound/gcSound.mp3')
   }
 
   /* Creating a new object by using an existing object as the prototype for the new object. Used to create game objects. 
@@ -91,37 +102,36 @@ class GameScene extends Phaser.Scene {
     this.createAlien()
     // Collisions between missiles and aliens
     this.physics.add.collider(this.missileGroup, this.alienGroup, function(missileCollide, alienCollide) {
+      // Destroy the alien and missile
       alienCollide.destroy()
       missileCollide.destroy()
+      // Play collision sound
       this.sound.play('explosion')
+      // Update score
       this.score = this.score + 1
       this.scoreText.setText('Score: ' + this.score.toString())
+      // Create two more aliens
       this.createAlien()
       this.createAlien()
     }.bind(this))
 
-
-      const myAudio = new Audio('../sound/gcSound.mp3'); 
-      if (typeof myAudio.loop == 'boolean')
+      // Assign the aduio variable to the proper sound
+      this.myAudio = new Audio('../sound/gcSound.mp3'); 
+      if (typeof this.myAudio.loop == 'boolean')
       {
-          myAudio.loop = true;
+        // Loop the audio
+          this.myAudio.loop = true;
       }
       else
       {
-          myAudio.addEventListener('ended', function() {
+        // Add event listener
+          this.myAudio.addEventListener('ended', function() {
               this.currentTime = 0;
               this.play();
           }, false);
       }
-      myAudio.play();
-    }
-
-  wait(ms){
-    var current = new Date().getTime();
-    var end = current + ms;
-    while(end < current) {
-      current = new Date().getTime();
-    }
+    // Play the audio
+      this.myAudio.play();
   }
 
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
@@ -129,11 +139,6 @@ class GameScene extends Phaser.Scene {
    */ 
   update (time, delta) {
     // Called 60 times a second, ideally!
-    
-    //const audio = new Audio(bgMusic)
-    //audio.play()
-    //var audio = new Audio('../sound/gcSound.mp3');
-    //audio.play();
     // Create variables to get information about what is happening to each key
     // Look at scene, then for input from of the keyboard, then look for the left key
     const keyLeftObj = this.input.keyboard.addKey('LEFT')
@@ -177,6 +182,7 @@ class GameScene extends Phaser.Scene {
     }
 
     // Wrap sprite to other side once it exceeds limit horizontally
+    // If the ship exceeds limits at the left of the screen, set to the right, otherwise if it exceeds limits at the right of the screen, set to the left side of the screen
     if (this.ship.x < 0) {
       this.ship.x = 1920
     } else if (this.ship.x > 1920) {
@@ -184,6 +190,7 @@ class GameScene extends Phaser.Scene {
     }
 
     // Wrap sprite to other side once it exceeds limit vertically
+    // If the ship exceeds limits at the top of the screen, set to the bottom, otherwise if it exceeds limits downwards, set to top of the screen
     if (this.ship.y < 0) {
       this.ship.y = 1080
     } else if (this.ship.y > 1080) {
@@ -209,7 +216,7 @@ class GameScene extends Phaser.Scene {
       this.fireMissile = false
     }
 
-    // Function to move the missile and then destroy once it leeaves the screen
+    // Function to move the missile and then destroy once it leaves the screen
     this.missileGroup.children.each(function (item) {
       item.x = item.x + 15
       if (item.x < 0) {
@@ -217,14 +224,15 @@ class GameScene extends Phaser.Scene {
       }
     })
 
-    // test if enemy leaves screen
+    // If no alien is destroyed from the user, wrap it around the screen
     this.alienGroup.children.each(function (item) {
-    
-      if ((item.x < 0) ||  (item.y < 0)) {
+    // If alien exceeds left side, or upside, or downside
+      if ((item.x < 0) ||  (item.y < 0) || (item.y > 1080)) {
         // Put back to right side of screen
         item.x = 2000
-        // generate a random y value on the screen
+        // Generate a random y value on the screen to place alien
         const alienYCoordinate = Math.floor(Math.random() * 1080) + 1
+        // Give the random y coordinate to the aliens
         item.y = alienYCoordinate
       }
     })
@@ -232,34 +240,46 @@ class GameScene extends Phaser.Scene {
     
     // Collisions between car and aliens
     this.physics.add.collider(this.ship, this.alienGroup, function (shipCollide, alienCollide) {
+      // PLay collision noise
       this.sound.play('explosion')
+      // Destroy car and alien
       this.ship.destroy()
-
-     
-      
+      alienCollide.destroy()
+      // If crash is not null, then destroy the crash (create new one)
       if(this.crash != null){
         this.crash.destroy()
       }
-
+      // Set crash (image) to same spot as car (spot where collision occurs)
       this.crash = this.physics.add.sprite(this.ship.x, this.ship.y, 'carCrash')
  
-      
+      // Create new car
       this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'shipR')
-
+      // Update lives
       this.lives = this.lives - 1
+      // Update lives text
       this.livesText.text = "Lives: " + this.lives
       if (this.lives === 0) {
+        // When you have no more lives
+        // Pause audio
+        this.myAudio.pause();
+        // Play game over audio
         this.sound.play('boo')
+        // Pause physics
         this.physics.pause()
+        // Destroy car and enemy car
         alienCollide.destroy()
         shipCollide.destroy()
-        this.ship.destroy()        
+        this.ship.destroy()    
+        // Set score back to 0
         this.score = 0
+        // Game over text
         this.gameOverText = this.add.text(1920 / 2, 1080 / 2, 'Game Over!\nClick to play again.', this.gameOverTextStyle).setOrigin(0.5)
+        // Make them click screen to play again
         this.gameOverText.setInteractive({ useHandCursor: true })
         this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
-      }      
+      }
     }.bind(this))
+    // Reset lives to 3
     if(this.lives === 0){
       this.lives = 3
     }

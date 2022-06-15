@@ -8,11 +8,14 @@
 
 // This class is the Title Scene
 class MenuScene extends Phaser.Scene {
-  // This method is the constructor.
+  // This method is the constructor.  
   constructor () {
     super({ key: 'menuScene' })
-    // Create my variables (menu scene background, start button)
+    // Create my audio
+    this.myAudio2 = null
+    // Create my variables (menu scene background, start button, instructions button)
     this.menuSceneBackgroundImage = null
+    // Start button to lead to game scene
     this.startButton = null
     // Instructions button to lead to instrucitons page
     this.instructionsButton = null
@@ -23,15 +26,19 @@ class MenuScene extends Phaser.Scene {
    * via ScenePlugin.add() or ScenePlugin.start(). Background colour is set to white. 
    */ 
   init (data) {
+    // Initialize background colour to goldenrod
     this.cameras.main.setBackgroundColor('#ffffff')
   }
 
   // Handle asynchronous external file loading in a blocking manner. Used to load assets.
   preload () {
     console.log('Menu Scene')
-    // Load background image and start button
+    // Load images for the menu scene
+    // Background image
     this.load.image('menuSceneBackground', 'images/nissanSkyline2.jpg')
+    // Start button image
     this.load.image('startButton', 'images/pressStart.gif')
+    // Instructions button image
     this.load.image('instructionsButton', 'images/instructionsButton.png')
   }
 
@@ -51,6 +58,24 @@ class MenuScene extends Phaser.Scene {
     this.instructionsButton = this.add.sprite(1920 / 2, (1080 / 2) + 300, 'instructionsButton').setScale(0.25)
     this.instructionsButton.setInteractive({ useHandCursor: true })
     this.instructionsButton.on('pointerdown', () => this.clickButton2())
+    // Assign the aduio variable to the proper sound
+    this.myAudio2 = new Audio('../sound/mcSound.mp3'); 
+      if (typeof this.myAudio2.loop == 'boolean')
+      {
+        // Loop the audio 
+          this.myAudio2.loop = true;
+      }
+      else
+      {
+        // Add event listener
+          this.myAudio2.addEventListener('ended', function() {
+          // Rewind the time of sound to 0 (the start)
+              this.currentTime = 0;
+              this.play();
+          }, false);
+      }
+    // Play the audio
+      this.myAudio2.play();
   }
 
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
@@ -60,12 +85,15 @@ class MenuScene extends Phaser.Scene {
   }
   
   clickButton () {
+    // Pause sound when button is clicked (going to next scene)
     // Start game scene when button is clicked
-    this.scene.start('gameScene')
+    this.myAudio2.pause();
+    this.myAudio2.currentTime = 0;
+    this.scene.switch('gameScene')
   }
   clickButton2 () {
-    // Start game scene when button is clicked
-    this.scene.start('instructionsScene')
+    // Start instructions scene when button is clicked
+    this.scene.switch('instructionsScene')
   }
 }
 

@@ -11,7 +11,7 @@ class TitleScene extends Phaser.Scene {
   // This method is the constructor.
   constructor () {
     super({ key: 'titleScene' })
-    // Create my variables (title scene background, text)
+    // Create my variables (title scene background image, title scene text)
     this.titleSceneBackgroundImage = null
     this.titleSceneText = null
     this.titleSceneTextStyle = { font: '200px Times', fill: '#fde4b9', align: 'center' }
@@ -22,6 +22,7 @@ class TitleScene extends Phaser.Scene {
    * via ScenePlugin.add() or ScenePlugin.start(). Background colour is set to goldenrod. 
    */ 
   init (data) {
+    // Initialize background colour to goldenrod
     this.cameras.main.setBackgroundColor('#daa520')
   }
 
@@ -48,8 +49,8 @@ class TitleScene extends Phaser.Scene {
    * per game step while the scene is running. time = current time. delta = the delta time in ms since the last frame. 
    */ 
   update (time, delta) {
-    // Switch screen after 7000 milliseconds
-    if (time > 5000){
+    // Switch screen to the menu scene after 8000 milliseconds
+    if (time > 8000){
       this.scene.switch('menuScene')
     }
   }  
