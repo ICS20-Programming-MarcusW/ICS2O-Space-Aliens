@@ -90,11 +90,11 @@ class GameScene extends Phaser.Scene {
     // Scaling and setting background image to proper spot
     this.background = this.add.image(0, 0, 'gameSceneBackground').setScale(5.0)
     this.background.setOrigin(0, 0)
-    // Text for the users score
-    this.scoreText = this.add.text(20, 20, 'Score: ' + this.score.toString(), this.scoreTextStyle)
-    // Text for the users lives counter
-    this.livesText = this.add.text(333, 20, 'Lives: ' + this.lives.toString(), this.livesTextStyle)
     this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'shipR')
+    const layer = this.add.layer();
+
+    layer.add([ this.background, this.ship ]);
+    
     // Creating a group for the missiles
     this.missileGroup = this.physics.add.group()
     // Creating a group for the enemies
@@ -132,6 +132,15 @@ class GameScene extends Phaser.Scene {
       }
     // Play the audio
       this.myAudio.play();
+
+    
+    
+    // Text for the users score
+    this.scoreText = this.add.text(20, 20, 'Score: ' + this.score.toString(), this.scoreTextStyle)
+    // Text for the users lives counter
+    this.livesText = this.add.text(333, 20, 'Lives: ' + this.lives.toString(), this.livesTextStyle)
+
+    
   }
 
   /* Replacing old content of the element with new provided content, and returning the element. This method is called once 
@@ -251,19 +260,30 @@ class GameScene extends Phaser.Scene {
       }
       // Set crash (image) to same spot as car (spot where collision occurs)
       this.crash = this.physics.add.sprite(this.ship.x, this.ship.y, 'carCrash')
- 
+
       // Create new car
       this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, 'shipR')
       // Update lives
       this.lives = this.lives - 1
       // Update lives text
       this.livesText.text = "Lives: " + this.lives
+      if (this.lives === 2) {
+        this.createAlien()
+      } else if (this.lives === 1) {
+        this.createAlien()
+      }
+      
       if (this.lives === 0) {
         // When you have no more lives
         // Pause audio
         this.myAudio.pause();
         // Play game over audio
         this.sound.play('boo')
+
+        // Loop to destroy all items (enemy trucks) when the game is over so that you can see your score
+        this.alienGroup.children.each(function (item) {
+          item.destroy()
+        })
         // Pause physics
         this.physics.pause()
         // Destroy car and enemy car
