@@ -41,7 +41,7 @@ class SplashScene extends Phaser.Scene {
 		this.splashSceneBackgroundImage = this.add.sprite(0, 0, 'splashSceneBackground')
 		this.splashSceneBackgroundImage.x = 1920 / 2
 		this.splashSceneBackgroundImage.y = 1080 / 2
-		// Assign the aduio variable to the proper sound
+		// Assign the audio variable to the proper sound
 		this.myAudio2 = new Audio('../sound/splash.mp3');
 		if (typeof this.myAudio2.loop == 'boolean') {
 			// Do not loop the audio

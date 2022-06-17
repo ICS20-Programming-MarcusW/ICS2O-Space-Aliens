@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
 		// this will add minus sign in 50% of cases
 		ETruckYVelocity *= Math.round(Math.random()) ? 1 : -1
 		const anETruck = this.physics.add.sprite(2000, ETruckYLocation, 'enemy')
-		// Set the y coordinate velocity to -200
+		// Set the y coordinate velocity to -150
 		anETruck.body.velocity.x = -150
 		anETruck.body.velocity.y = ETruckYVelocity
 		// Group for all enemy trucks
@@ -70,7 +70,7 @@ class GameScene extends Phaser.Scene {
 	 * via ScenePlugin.add() or ScenePlugin.start(). Background colour is set to white. 
 	 */
 	init(data) {
-		// Initialize backgroudn color to white
+		// Initialize background color to white
 		this.cameras.main.setBackgroundColor('#ffffff')
 	}
 
@@ -128,7 +128,7 @@ class GameScene extends Phaser.Scene {
 			this.createETruck()
 		}.bind(this))
 
-		// Assign the aduio variable to the proper sound
+		// Assign the audio variable to the proper sound
 		this.myAudio = new Audio('../sound/gcSound.mp3');
 		if (typeof this.myAudio.loop == 'boolean') {
 			// Loop the audio
@@ -252,7 +252,7 @@ class GameScene extends Phaser.Scene {
 
 		// Collisions between car and enemies
 		this.physics.add.collider(this.car, this.ETruckGroup, function(carCollide, ETruckCollide) {
-			// PLay collision noise
+			// Play collision noise
 			this.sound.play('explosion')
 			// Destroy car and enemy truck
 			this.car.destroy()

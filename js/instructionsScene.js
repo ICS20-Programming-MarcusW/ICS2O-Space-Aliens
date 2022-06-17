@@ -60,9 +60,9 @@ class InstructionsScene extends Phaser.Scene {
 		// Set title scene text to center, then up a bit
 		this.titleSceneText = this.add.text(1920 / 2, (1080 / 2) - 350, 'Skyline : Instructions', this.TextStyle).setOrigin(0.5)
 		// Text for the goal of my video game in instructions page
-		this.titleSceneText2 = this.add.text(1920 / 2, (1080 / 2) - 200, 'Goal : The goal of the game as a player is to get as high as a score as you possibly can. You can play against friends, and whoever ends up with the highest score, wins.', this.TextStyle2).setOrigin(0.5)
+		this.titleSceneText2 = this.add.text(1920 / 2, (1080 / 2) - 200, 'Goal : The goal of the game as a player is to get as high of a score as you possibly can. You can play against friends, family, and whoever ends up with the highest score, wins.', this.TextStyle2).setOrigin(0.5)
 		// Text for how to play my video game in instructions page
-		this.titleSceneText3 = this.add.text(1920 / 2, (1080 / 2), 'How to play : \n\n 1. You are a blue nissan skyline that is trying to stay alive as long as you can. \n 2. There are enemies that will spawn and come at you and in order to kill them, you must use your weapon (tires) to dissipate them. \n 3. If the enemies end up colliding with you, you will then lose. \n 4. They are only dangerous from the front, so you can collide with them from behind. \n\n Have Fun!', this.TextStyle3).setOrigin(0.5)
+		this.titleSceneText3 = this.add.text(1920 / 2, (1080 / 2), 'How to play : \n\n 1. You are a blue nissan skyline that is trying to stay alive as long as you can. \n 2. There are enemies that will spawn, come at you, and in order to destroy them, you must use your weapon (tires) to dissipate them. For each one you destroy, you gain a point. \n     Additionally, for every enemy you destroy, two more will spawn. \n 3. If the enemies end up colliding with you, you will then lose a life, if you lose three, you lose. \n 4. They are only dangerous from the front, so you can collide with them from behind. \n\n Stay alive as long as you can, and Have Fun!', this.TextStyle3).setOrigin(0.5)
 		// Setting menu button to proper spot and making it interactive
 		this.menuButton = this.add.sprite(1920 / 2, (1080 / 2) + 300, 'menuButton').setScale(0.09)
 		this.menuButton.setInteractive({
